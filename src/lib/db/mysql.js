@@ -1,15 +1,21 @@
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+dotenv.config(); 
 
 let mysqlconn = null;
 
-export function mysqlconnFn() {
+export async function mysqlconnFn() {
   if (!mysqlconn) {
-    mysqlconn = mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "admin",
-      database: "mailparser",
-    });
+    try {
+      mysqlconn = await mysql.createConnection({
+        uri: process.env.MYSQL_URL // Usar el URI directamente
+      });
+      console.log("Database connection established");
+    } catch (error) {
+      console.error("Error establishing database connection:", error);
+      throw new Error("Database connection failed");
+    }
   }
 
   return mysqlconn;
