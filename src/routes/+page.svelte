@@ -1,59 +1,93 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+  import Header from '../components/Header.svelte';
+  import Inbox from '../components/Inbox.svelte';
+  import { theme } from '../store/store.js';
+  import { onMount } from 'svelte';
+  import { fetchEmails } from '$lib/api';
+
+  let emails = [];
+  let errorMessage = '';
+
+  export let data;
+
+  onMount(async () => {
+  try {
+    emails = await fetchEmails();
+    data = emails;
+  } catch (error) {
+    errorMessage = error.message;
+  }
+});
+
+async function handleAnalyzeEmails() {
+  try {
+    const response = await fetch('/api/run_script', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ scriptName: 'analyze_emails.py' })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      window.location.reload(); 
+    } else {
+      errorMessage = result.message;
+    }
+  } catch (error) {
+    errorMessage = error.message;
+  }
+}
+
+onMount(() => {
+  if (typeof document !== 'undefined') {
+    if ($theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+});
+
+$: {
+  if (typeof document !== 'undefined') {
+    if ($theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+}
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
+<main class="contenedor bg-white dark:bg-[#1f2937] text-black dark:text-white">
+  <Header />
+  <section class="inbox-container flex-grow overflow-hidden p-3">
+    {#if errorMessage}
+      <p class="error-message">{errorMessage}</p>
+    {/if}
+    <Inbox {data} {handleAnalyzeEmails}/>
+  </section>
+</main>
 
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
+  .contenedor {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 
-	h1 {
-		width: 100%;
-	}
+  .inbox-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
+  .error-message {
+    color: red;
+    margin-bottom: 1rem;
+  }
 </style>

@@ -12,23 +12,24 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@fontsource/fira-mono": "^4.5.10",
-		"@neoconfetti/svelte": "^1.0.0",
-		"@sveltejs/adapter-node": "^1.0.0",
-		"@sveltejs/kit": "^1.0.0",
-		"@types/cookie": "^0.5.1",
-		"@typescript-eslint/eslint-plugin": "^5.45.0",
-		"@typescript-eslint/parser": "^5.45.0",
-		"eslint": "^8.28.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte3": "^4.0.0",
-		"prettier": "^2.8.0",
-		"prettier-plugin-svelte": "^2.8.1",
-		"svelte": "^3.54.0",
-		"svelte-check": "^3.0.1",
-		"tslib": "^2.4.1",
-		"typescript": "^4.9.3",
-		"vite": "^4.0.0"
+		"@iconify/svelte": "^4.0.2",
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-node": "^5.2.0",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.4.41",
+		"svelte": "^4.2.7",
+		"tailwindcss": "^3.4.7",
+		"vite": "^5.0.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"axios": "^1.7.2",
+		"date-fns": "^3.6.0",
+		"dotenv": "^16.4.5",
+		"mysql2": "^3.11.0",
+		"svelte-local-storage-store": "^0.6.4",
+		"svelte-routing": "^2.13.0"
+	}
 }
